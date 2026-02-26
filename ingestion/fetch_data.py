@@ -29,12 +29,25 @@ for ticker in tickers:
     dividends = stock.dividends
 
     if not dividends.empty:
-        recent_dividends = dividends.last("1Y")  # 최근 1년
+        one_year_ago = pd.Timestamp.today() - pd.DateOffset(years=1)
+        recent_dividends = dividends[dividends.index >= one_year_ago]
         months = sorted(set(recent_dividends.index.month))
         print("배당 지급 월 :", months)
     else:
         print("배당 지급 이력 없음")
+    row = {
+        "ticker": ticker,
+        "price": price,
+        "dividend": dividend,
+        "dividend_yield": dividend_yield,
+        "dividend_months": months if not dividends.empty else None
+    }
 
+    df = pd.DataFrame([row])
+
+    file_path = f"data/raw/{ticker}.csv"
+
+    df.to_csv(file_path, index=False)
     print("-" * 40)
 
 print("수집 종료")
