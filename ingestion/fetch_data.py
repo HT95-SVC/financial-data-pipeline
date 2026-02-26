@@ -29,7 +29,7 @@ for ticker in tickers:
     dividends = stock.dividends
 
     if not dividends.empty:
-        one_year_ago = pd.Timestamp.today() - pd.DateOffset(years=1)
+        one_year_ago = pd.Timestamp.now(tz=dividends.index.tz) - pd.DateOffset(years=1)
         recent_dividends = dividends[dividends.index >= one_year_ago]
         months = sorted(set(recent_dividends.index.month))
         print("배당 지급 월 :", months)
